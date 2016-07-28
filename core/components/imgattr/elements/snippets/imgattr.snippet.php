@@ -22,7 +22,7 @@
  * [[*image_tv:imgattr=`height`]] => '50'
  * [[*image_tv:imgattr=`dimensions`]] => 'width="100" height="50"'
  * [[*image_tv:imgattr=`mime`]] => 'image/jpeg'
- *
+ * [[*image_tv:imgattr=`orientation`]] => 'square|portr|landsc'
  */
 
 /* $input is required */
@@ -61,6 +61,23 @@ if (!$attr) {
 $pathinfo = array();
 $pathinfo = pathinfo($input);
 
+/* calculate orientation */
+$dim = $attr[0]/$attr[1];
+
+switch (true) {
+    case $dim == 1:
+        $rel = "square";
+        break;
+    case $dim > 1:
+        $rel = "landsc";
+        break;
+    case $dim < 1:
+        $rel = "portr";
+        break;
+    default:
+        $rel = "noor";
+        break;
+}
 /* Output array */
 $output = array(
     'filename' => $pathinfo['basename'],
@@ -69,6 +86,7 @@ $output = array(
     'height' => $attr[1],
     'dimensions' => $attr[3],
     'mime' => $attr['mime'],
+    'orientation' => $rel
 );
 
 /* Set options */
